@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nexora Logics – simple tools for everyday office work</title>
+<meta name="description" content="Nexora Logics makes simple browser tools for everyday office work: QuickSend for personalised WhatsApp Web messages from Excel, and PDF Desk, a free offline PDF editor.">
+<meta property="og:title" content="Nexora Logics">
+<meta property="og:description" content="Simple tools for the office jobs you repeat every week. They run in your browser and keep your data on your own computer.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231B1F3B'/><path d='M9 23V9l14 14V9' fill='none' stroke='%23fff' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Bricolage Grotesque";font-weight:700;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Bricolage Grotesque";font-weight:800;font-display:swap;src:url(assets/fonts/bricolage-grotesque-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Instrument Sans";font-weight:400;font-display:swap;src:url(assets/fonts/instrument-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Instrument Sans";font-weight:500 700;font-display:swap;src:url(assets/fonts/instrument-sans-latin-600-normal.woff2) format("woff2")}
+
+:root{
+  --bg:#F1F2F6; --surface:#FFFFFF; --ink:#1B1F3B; --muted:#5A5F78; --line:#D9DBE5;
+  --brand:#3446E8;
+  --qs:#0F766E; --qs-soft:#E2F2EF; --qs-tint:#F3FAF8;
+  --pd:#C8372D; --pd-soft:#F6E2DF; --pd-tint:#FCF6F5; --pd-sig:#1F4E9A;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --text:"Instrument Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#14172B; --surface:#1D2138; --ink:#ECEDF5; --muted:#A6AAC2; --line:#2F3452; --brand:#8D99FF;
+    --qs:#4FC1B4; --qs-soft:#173A3A; --qs-tint:#18262F; --pd:#E8695F; --pd-soft:#3A2228; --pd-tint:#251E2A; --pd-sig:#86A9EC; color-scheme:dark; }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.6 var(--text);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--brand);outline-offset:3px;border-radius:6px}
+.wrap{width:min(1120px,100% - 40px);margin-inline:auto}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.02;letter-spacing:-.02em}
+p{margin:0 0 1em;max-width:60ch}
+
+/* header */
+.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.mark{display:flex;align-items:center;gap:11px;text-decoration:none;font:800 22px/1 var(--display);letter-spacing:-.02em}
+.mark svg{width:32px;height:32px}
+.top nav{display:flex;gap:26px;font-size:16px}
+.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{padding:70px 0 80px}
+.hero h1{font-size:clamp(46px,7.2vw,92px);font-weight:800;max-width:13ch}
+.hero p{font-size:clamp(19px,2vw,22px);color:var(--muted);margin-top:28px;max-width:46ch}
+
+/* apps */
+.apps{display:grid;gap:28px;padding-bottom:40px}
+.app{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:52px;align-items:center;border-radius:28px;padding:52px;background:var(--surface);border:1px solid var(--line)}
+.app.qs{background:var(--qs-tint)}
+.app.pd{background:var(--pd-tint)}
+.app h2{font-size:clamp(40px,5vw,60px);font-weight:800}
+.app .what{font-size:21px;margin:12px 0 22px;max-width:30ch}
+.app ul{list-style:none;margin:0 0 26px;padding:0}
+.app li{padding:9px 0 9px 26px;border-top:1px solid var(--line);position:relative;font-size:17px;color:var(--muted)}
+.app li::before{content:"";position:absolute;left:2px;top:19px;width:10px;height:10px;border-radius:3px;background:var(--accent)}
+.app .meta{font-size:15px;color:var(--muted);margin:0 0 22px}
+.app .meta b{color:var(--ink);font-weight:600}
+.qs{--accent:var(--qs)} .pd{--accent:var(--pd)}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;font:600 17px/1 var(--text);padding:15px 22px;border-radius:12px;text-decoration:none;border:2px solid var(--accent);color:var(--accent)}
+.btn.solid{background:var(--accent);color:#fff}
+.btn:hover{filter:brightness(1.08)}
+@media (prefers-color-scheme:dark){ .btn.solid{color:#10131F} }
+
+/* QuickSend artwork: a sheet becomes a message */
+.art{position:relative}
+.sheet{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14px;box-shadow:0 14px 34px -18px rgba(27,31,59,.35)}
+.sheet table{width:100%;border-collapse:collapse}
+.sheet th{font-weight:600;text-align:left;padding:9px 12px;background:var(--bg);color:var(--muted);font-size:13px}
+.sheet td{padding:9px 12px;border-top:1px solid var(--line);white-space:nowrap}
+.sheet td.n{text-align:right;font-variant-numeric:tabular-nums}
+.sheet tr.on td{background:var(--qs-soft)}
+.bubble{position:relative;margin:-18px 0 0 auto;width:min(340px,92%);background:var(--surface);border:1px solid var(--line);border-radius:16px 16px 4px 16px;padding:14px 16px 10px;font-size:15px;line-height:1.5;box-shadow:0 18px 40px -18px rgba(27,31,59,.45)}
+.bubble .to{font-size:12px;color:var(--muted);margin-bottom:4px}
+.bubble mark{background:var(--qs-soft);color:var(--qs);font-weight:600;border-radius:4px;padding:0 3px}
+.bubble .time{display:block;text-align:right;font-size:12px;color:var(--muted);margin-top:4px}
+.bubble .time span{color:var(--qs);letter-spacing:-2px;margin-left:4px}
+
+/* PDF Desk artwork: a reviewed page */
+.page{position:relative;background:#fff;border-radius:6px;padding:30px 30px 34px;box-shadow:0 1px 2px rgba(27,31,59,.15),0 22px 44px -20px rgba(27,31,59,.45);transform:rotate(1.2deg);color:#222;max-width:430px;margin-left:auto}
+.page .title{font:700 18px/1.2 var(--text);margin-bottom:16px;color:#222}
+.page .row{display:flex;align-items:center;gap:12px;height:30px}
+.page .row svg{width:20px;height:18px;flex:none}
+.page .bar{height:8px;border-radius:4px;background:#E3E5EC}
+.page .num{margin-left:auto;width:46px;height:8px;border-radius:4px;background:#E3E5EC}
+.page .sig{display:block;width:150px;height:44px;margin-top:22px}
+.page .stamp{position:absolute;right:26px;bottom:30px;transform:rotate(-8deg);color:#C8372D;border:3px solid currentColor;border-radius:8px;padding:6px 12px 5px;font:800 20px/1 var(--display);letter-spacing:.05em;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 3.5px currentColor;text-align:center}
+.page .stamp small{display:block;font:600 11px/1.3 var(--text);letter-spacing:.02em}
+
+/* next app slot */
+.next{border:2px dashed var(--line);border-radius:28px;padding:40px 52px;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.next h3{font-size:28px;font-weight:700;margin-bottom:6px}
+.next p{color:var(--muted);margin:0}
+.next a{--accent:var(--brand)}
+
+/* principles */
+.how{padding:90px 0}
+.how h2{font-size:clamp(34px,4.4vw,52px);font-weight:800;margin-bottom:38px;max-width:20ch}
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.cols h3{font-size:23px;font-weight:700;margin-bottom:10px}
+.cols p{color:var(--muted);font-size:17px}
+
+/* contact + footer */
+.contact{background:var(--ink);color:var(--bg);border-radius:28px;padding:56px;margin-bottom:60px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end}
+.contact h2{font-size:clamp(34px,4.4vw,52px);font-weight:800}
+.contact p{color:color-mix(in srgb,var(--bg) 75%,var(--ink));margin:14px 0 0}
+.contact dl{margin:0;display:grid;gap:14px}
+.contact dt{font-size:14px;color:color-mix(in srgb,var(--bg) 65%,var(--ink))}
+.contact dd{margin:0;font:600 19px/1.3 var(--text)}
+.contact dd a{text-decoration-thickness:1px;text-underline-offset:4px}
+footer{padding:0 0 calc(40px + env(safe-area-inset-bottom,0px));font-size:14px;color:var(--muted)}
+footer p{max-width:none;margin:0 0 6px}
+
+@media (max-width:880px){
+  body{font-size:17px}
+  .top nav{display:none}
+  .hero{padding:40px 0 56px}
+  .app{grid-template-columns:1fr;padding:30px 24px;gap:34px;border-radius:22px}
+  .app .art{order:-1}
+  .page{margin:0 auto}
+  .sheet{font-size:13px}.sheet th,.sheet td{padding:8px 8px}
+  .next{padding:30px 24px}
+  .cols,.contact{grid-template-columns:1fr}
+  .contact{padding:36px 26px;border-radius:22px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="mark" href="#"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M9 23V9l14 14V9" fill="none" stroke="var(--bg)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nexora Logics</a>
+  <nav aria-label="Sections"><a href="#apps">Apps</a><a href="#how">How we build</a><a href="#contact">Contact</a></nav>
+</header>
+
+<main>
+<section class="wrap hero">
+  <h1>Simple tools for the office jobs you repeat every week.</h1>
+  <p>Sending the same reminder to fifty customers. Signing, ticking and fixing a PDF. Nexora Logics makes small apps that do these jobs in minutes, right in your browser, without sending your data anywhere.</p>
+</section>
+
+<section class="wrap apps" id="apps" aria-label="Apps">
+
+  <!-- ================= QuickSend ================= -->
+  <article class="app qs">
+    <div>
+      <h2>QuickSend</h2>
+      <p class="what">Your Excel sheet, sent as personal WhatsApp Web messages.</p>
+      <ul>
+        <li>Each customer gets their own name, amount and due date</li>
+        <li>Payment reminders, order follow-ups, targets, offers and greetings</li>
+        <li>Rows with a zero or blank amount are skipped automatically</li>
+      </ul>
+      <p class="meta"><b>Chrome extension.</b> Free for 50 messages a month. Pro from ₹299, prepaid with nothing to cancel.</p>
+      <div class="actions">
+        <a class="btn solid" href="https://quicksend.nexoralogics.com/">Visit QuickSend</a>
+        <a class="btn" href="https://chromewebstore.google.com/detail/onipoefkcpcnjhghhheaggbbakdejmdi">Add to Chrome</a>
+      </div>
+    </div>
+    <div class="art" aria-hidden="true">
+      <div class="sheet">
+        <table>
+          <tr><th>Name</th><th>Amount</th><th>Due date</th></tr>
+          <tr class="on"><td>Patel Traders</td><td class="n">25,000</td><td>15-10-2026</td></tr>
+          <tr><td>Shree Ganesh Stores</td><td class="n">8,450</td><td>18-10-2026</td></tr>
+          <tr><td>Mehta &amp; Sons</td><td class="n">1,12,000</td><td>20-10-2026</td></tr>
+          <tr><td>Krishna Medicals</td><td class="n">3,200</td><td>22-10-2026</td></tr>
+        </table>
+      </div>
+      <div class="bubble">
+        <div class="to">To: Patel Traders</div>
+        Dear <mark>Patel Traders</mark>, this is a friendly reminder that Rs. <mark>25,000</mark> is due on <mark>15-10-2026</mark>. Thank you!
+        <span class="time">10:42<span>✓✓</span></span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ================= PDF Desk ================= -->
+  <article class="app pd">
+    <div>
+      <h2>PDF Desk</h2>
+      <p class="what">Edit, sign, stamp and fill PDFs, offline on Windows.</p>
+      <ul>
+        <li>Change existing text, even on scanned pages</li>
+        <li>Ticks, strike-offs, signatures, stamps and fillable forms</li>
+        <li>Nothing to install, and your files are never uploaded</li>
+      </ul>
+      <p class="meta"><b>Runs in Chrome or Edge.</b> Free for everyone, every feature.</p>
+      <div class="actions">
+        <a class="btn solid" href="https://pdfdesk.nexoralogics.com/">Visit PDF Desk</a>
+        <a class="btn" href="https://github.com/nexora-logics/pdfdesk/releases/latest">Download for Windows</a>
+      </div>
+    </div>
+    <div class="art" aria-hidden="true">
+      <div class="page">
+        <div class="title">Pending Booking Ageing Report</div>
+        <div class="row"><svg viewBox="0 0 20 18"><path d="M2 9l5 6L18 2" fill="none" stroke="#C8372D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bar" style="width:46%"></div><div class="num"></div></div>
+        <div class="row"><svg viewBox="0 0 20 18"><path d="M2 9l5 6L18 2" fill="none" stroke="#C8372D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bar" style="width:38%"></div><div class="num"></div></div>
+        <div class="row"><svg viewBox="0 0 20 18"><path d="M2 9l5 6L18 2" fill="none" stroke="#C8372D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="bar" style="width:52%"></div><div class="num"></div></div>
+        <div class="row"><svg viewBox="0 0 20 18"><path d="M4 3l12 12M16 3L4 15" fill="none" stroke="#C8372D" stroke-width="2.6" stroke-linecap="round"/></svg><div class="bar" style="width:30%"></div><div class="num"></div></div>
+        <svg class="sig" viewBox="0 0 150 44"><path d="M4 30c8-20 14-22 16-8s6 16 12 2 10-14 12 0 8 10 14-2 12-8 16 2 10 6 18-2 18-4 52-6" fill="none" stroke="#1F4E9A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="stamp">VERIFIED<small>20-10-2026</small></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ================= Add new apps here =================
+       Copy the whole <article class="app ...">…</article> block above,
+       paste it here, and change the name, text and links.
+       For a new colour, add e.g.  .xx{--accent:#7C3AED}  and  .app.xx{background:#F6F2FF}  in the style section. -->
+
+  <div class="next">
+    <div>
+      <h3>More tools on the way</h3>
+      <p>Tell us which job you repeat every week. It might be the next app.</p>
+    </div>
+    <a class="btn" href="mailto:pdfdesk@nexoralogics.com?subject=Idea%20for%20a%20new%20Nexora%20app">Suggest an app</a>
+  </div>
+</section>
+
+<section class="wrap how" id="how">
+  <h2>Every app follows the same three rules.</h2>
+  <div class="cols">
+    <div><h3>Works where you already work</h3><p>In Chrome, Edge or WhatsApp Web on your own computer. No new software to learn and no admin rights needed.</p></div>
+    <div><h3>Your data stays with you</h3><p>Excel sheets, contacts and PDFs are read inside your browser. They are never uploaded to our servers.</p></div>
+    <div><h3>Free versions you can really use</h3><p>Start free and decide later. Paid plans are prepaid, so there are no automatic charges and nothing to cancel.</p></div>
+  </div>
+</section>
+
+<section class="wrap contact" id="contact">
+  <div>
+    <h2>Questions or ideas?</h2>
+    <p>Write to the app you are using. We read every message.</p>
+  </div>
+  <dl>
+    <div><dt>QuickSend</dt><dd><a href="mailto:quicksend.support@nexoralogics.com">quicksend.support@nexoralogics.com</a></dd></div>
+    <div><dt>PDF Desk</dt><dd><a href="mailto:pdfdesk@nexoralogics.com">pdfdesk@nexoralogics.com</a></dd></div>
+  </dl>
+</section>
+</main>
+
+<footer class="wrap">
+  <p>© 2026 Nexora Logics.</p>
+  <p>QuickSend is an independent tool and is not affiliated with, endorsed or sponsored by WhatsApp or Meta.</p>
+</footer>
+</body>
+</html>
